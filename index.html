@@ -1,0 +1,41 @@
+Hello World!
+
+<<body>
+
+    <input type="file" id="upload" accept="image" multiple>
+    <canvas id="canvas"></canvas>
+    <a id="downloadLink" download="converted-image.png">Download Converted Image</a>
+
+    <script type="module">
+        import init, {get_preview, image_to_jpeg, image_to_png, image_to_avif, image_to_webp, image_to_bmp, images_to_gif} from "./pkg/image_wasm.js"
+        const image_functions = {get_preview, image_to_jpeg, image_to_png, image_to_avif, image_to_webp, image_to_bmp, images_to_gif}
+        init()
+
+        document.image_functions = image_functions
+
+
+    </script>
+
+    <script>
+        document.getElementById('upload').addEventListener('change', handleImageUpload);
+        function handleImageUpload(event) {
+            const files = event.target.files;
+            document.file = files[0]
+            file = files[0]
+            if (!file) return;
+
+            async function onImagesLoad(images) {
+                console.time("processing")
+                console.log("processing")
+                for (const image of images) {
+                    const byteArray = await image.bytes();
+                    const imageData = document.image_functions.images_to_gif(byteArray);
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = URL.createObjectURL(new Blob([imageData], {type: "image/bmp"}));
+                };
+                console.timeEnd("processing")
+            };
+            onImagesLoad(files)
+        }
+    </script>
+    </body>
