@@ -1,11 +1,9 @@
 use std::fmt::Display;
 
-use image::{codecs::pnm::{BitmapHeader, PnmHeader}, load_from_memory_with_format, ImageEncoder, ImageFormat};
+use image::{load_from_memory_with_format, ImageEncoder, ImageFormat};
 use wasm_bindgen::prelude::*;
 
 pub struct WasmImageFormat(ImageFormat);
-
-use crate::log;
 
 #[derive(Debug)]
 pub enum WasmImageError {
@@ -31,12 +29,6 @@ pub fn get_image_format(image_bin: &[u8]) -> Result<ImageFormat, WasmImageError>
         Some(value) => value,
         None => return Err(WasmImageError::BinaryDataError("Binary data corrupted")),
     };
-
-    log(&format!(
-        "{:?}\n{:?}",
-        [0x66, 0x74, 0x79, 0x70, 0x61, 0x76, 0x69, 0x66],
-        avif_bytes
-    ));
 
     match *avif_bytes {
         [0x66, 0x74, 0x79, 0x70, 0x61, 0x76, 0x69, 0x66] => return Ok(ImageFormat::Avif),
