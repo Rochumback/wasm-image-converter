@@ -3,9 +3,6 @@ name = "image-wasm"
 version = "0.1.0"
 edition = "2021"
 
-[profile.release]
-opt-lvel = "3"
-
 [dependencies]
 image = "0.25.5"
 wasm-bindgen = "0.2.100"
