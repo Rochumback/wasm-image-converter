@@ -11,6 +11,12 @@ pub enum WasmImageError {
     BinaryDataError(&'static str),
 }
 
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = console)]
+    pub fn log(s: &str);
+}
+
 impl Display for WasmImageError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match *self {
@@ -68,6 +74,6 @@ pub fn image_to(image: Vec<u8>, encoder: impl ImageEncoder) -> Result<(), JsErro
         Ok(format) => format,
         Err(message) => return Err(JsError::new(&message.to_string())),
     };
-    _ = load_from_memory_with_format(&image, image_format)?.write_with_encoder(encoder);
+    load_from_memory_with_format(&image, image_format)?.write_with_encoder(encoder)?;
     Ok(())
 }
